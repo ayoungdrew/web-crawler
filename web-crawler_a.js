@@ -56,22 +56,14 @@ function webCrawl(internet) {
   // Record container for every page available on the internet
   const everyLink = []
   const pages = internet.pages
-  // Record of all pages visited, starting with page 1
+  // Populating everyLink container to record every available page on internet
+  pages.forEach(p => everyLink.push(p.address))
+  // Record of all pages visited, starting with just page 1
   const success = [pages[0].address]
   const skipped = []
   const error = []
-  // Populating everyLink container to record every available page on internet
-  pages.forEach(p => everyLink.push(p.address))
-  // Page 1 crawl
-  pages[0].links.forEach(link => {
-    if (everyLink.includes(link) && !success.includes(link)) {
-      success.push(link)
-    } else {
-      error.push(link)
-    }
-  })
-  // On to the rest of the pages
-  for (let i=1; i < pages.length; i++) {
+  // On to page 1 links and the rest of the pages
+  for (let i = 0; i < pages.length; i++) {
     // Checking if it was possible to arrive at this page to begin with
     if (success.includes(pages[i].address)) {
       // Now checking each link on the page
@@ -99,4 +91,4 @@ function webCrawl(internet) {
 }
 
 webCrawl(internetOne)
-// webCrawl(internetTwo)
+webCrawl(internetTwo)
