@@ -5,5 +5,5 @@ const internetOne = internetData.internetOne
 const internetTwo = internetData.internetTwo
 const internetThree = internetData.internetThree
 
-// webCrawl(internetOne)
+webCrawl(internetOne)
 webCrawl(internetTwo)
