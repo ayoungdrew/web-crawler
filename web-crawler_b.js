@@ -30,12 +30,12 @@ const internetTwo = {
       "links": ["http://foo.bar.com/p2"]
     },
     {
-      "address":"http://foo.bar.com/p3",
-      "links": ["http://foo.bar.com/p4"]
-    },
-    {
       "address":"http://foo.bar.com/p2",
       "links": ["http://foo.bar.com/p3"]
+    },
+    {
+      "address":"http://foo.bar.com/p3",
+      "links": ["http://foo.bar.com/p4"]
     },
     {
       "address":"http://foo.bar.com/p4",
@@ -52,40 +52,68 @@ const internetTwo = {
   ]
 }
 
+const internetThree = {
+  "pages": [
+    {
+      "address":"http://foo.bar.com/p1",
+      "links": ["http://foo.bar.com/p4"]
+    },
+    {
+      "address":"http://foo.bar.com/p2",
+      "links": ["http://foo.bar.com/p1"]
+    },
+    {
+      "address":"http://foo.bar.com/p3",
+      "links": ["http://foo.bar.com/p2"]
+    },
+    {
+      "address":"http://foo.bar.com/p4",
+      "links": ["http://foo.bar.com/p3"]
+    },
+  ]
+}
+
 function webCrawl(internet) {
-  // Record container for every page available on the internet
-  const everyAddress = []
-  const everyLink = []
   const pages = internet.pages
-  // Populating everyLink container to record every available page on internet
-  pages.forEach(p => everyAddress.push(p.address))
-  pages.forEach(p => p.links.forEach(link => everyLink.push(link)))
-  // Record of all pages visited, starting with just page 1
-  const success = [pages[0].address]
+  const listToExplore = [pages[0]]
+  const listVisited = [pages[0].address]
   const skipped = []
   const error = []
-  // On to page 1 links and the rest of the pages
-  for (let i = 0; i < pages.length; i++) {
-    if (success.includes(pages[i].address)) {
-      pages[i].links.forEach(link => {
-        if (everyAddress.includes(link) && success.includes(link) && !skipped.includes(link)) {
-          skipped.push(link)
-        } else if (everyLink.includes(link) && !success.includes(link)) {
-          success.push(link)
-        } else if (!everyLink.includes(link)) {
-          error.push(link)
-        }
+
+  while ( listToExplore.length > 0 ) {
+    // Removes page from to-visit list, prep for page crawl
+    let nodeIndex = listToExplore.shift()
+    nodeIndex.links.forEach( function (childIndex) {
+      // Creates variable for the link's page object if one exists in internet
+      let childIndexPage = pages.find(function (page) {
+        return page.address === childIndex
       })
-    }
+      // Tests if link goes to a real page. If so, it's added to to-visit list
+      if (!listVisited.includes(childIndex) && childIndexPage) {
+        listVisited.push(childIndex)
+        listToExplore.push(childIndexPage)
+      }
+      // Tests if we've been to the link URL before
+      else if (listVisited.includes(childIndex) && !skipped.includes(childIndex)) {
+        skipped.push(childIndex)
+      }
+      // Records broken links
+      else if (!childIndexPage) {
+        error.push(childIndex)
+      }
+    })
   }
 
-  const results = {}
-  results.success = success
-  results.skipped = skipped
-  results.error = error
+  const results = {
+    success: listVisited,
+    skipped,
+    error
+  }
+  
   console.log(results)
   return results
 }
 
 webCrawl(internetOne)
 webCrawl(internetTwo)
+// webCrawl(internetThree)
