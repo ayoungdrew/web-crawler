@@ -24,6 +24,7 @@ describe('Web crawler', function() {
     console.log('Now swapping page array indices 1 and 2')
     console.log('New page array, index 1:', internetTwo.pages[1])
     console.log('New page array, index 2:', internetTwo.pages[2])
+    console.log('result is', result)
     assert.deepEqual(result,
       { success:
          [ 'http://foo.bar.com/p1',
