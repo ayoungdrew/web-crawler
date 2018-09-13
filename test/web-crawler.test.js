@@ -28,8 +28,8 @@ describe('Web crawler', function() {
     assert.deepEqual(result,
       { success:
          [ 'http://foo.bar.com/p1',
-           'http://foo.bar.com/p3',
            'http://foo.bar.com/p2',
+           'http://foo.bar.com/p3',
            'http://foo.bar.com/p4',
            'http://foo.bar.com/p5' ],
         skipped: [ 'http://foo.bar.com/p1' ],
